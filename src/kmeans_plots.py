@@ -10,6 +10,11 @@ from sklearn.cluster import KMeans
 
 
 def create_cluster_scatter(image, k):
+    """
+    Creates scatter plots to better visualize 
+    what the KMeans process is doing when it 
+    groups the pixels within each image.
+    """
 
     image_shape = image.shape
     X = image.reshape(-1, 4)
