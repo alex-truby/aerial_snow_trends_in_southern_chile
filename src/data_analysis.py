@@ -12,6 +12,13 @@ from ruptures.utils import pairwise
 
 
 class AnalyzeData:
+    """
+    Outlines different ways to analyze data
+    once it has been processed into a dataframe 
+    after KMeans applied to each image. The functions
+    within this class should be run sequentially.
+    """
+
     def __init__(self, input_df, input_dict):
         self.input_df = input_df.copy()
         self.input_dict = input_dict
@@ -20,7 +27,11 @@ class AnalyzeData:
         self.breakpoint = None
 
     def weight_and_average(self):
-        # input_dict = area_dict
+        """
+        Weights snow cover in each image to be more
+        represented of total area analyzed across all
+        ten images.
+        """
         area_weights_dict = dict()
         total_area_analyzed = sum(self.input_dict.values())
         area_weights_vals = np.array(list(self.input_dict.values())) / float(
@@ -42,6 +53,9 @@ class AnalyzeData:
         return self.means, self.mean_of_means
 
     def create_bar_chart(self):
+        """
+        Creates a bar plot to visualize data.
+        """
         plt.style.use("ggplot")
         plt.rcParams.update({"font.size": 16, "font.family": "sans"})
 
@@ -73,12 +87,19 @@ class AnalyzeData:
         plt.show()
 
     def find_changepoint(self):
+        """
+        Uses ruptures binary segmentation algrotihm
+        to detect if there is a change point wihin the dataset.
+        """
         binseg_alg = rpt.Binseg(model="l2").fit(np.array(self.means))
         break_point, cost = binseg_alg._single_bkp(0, 33)
         self.breakpoint = break_point
         return self.breakpoint
 
     def plot_change_point(self):
+        """
+        Creates a chart to ilustrate the change point within the data. 
+        """
         # binseg_alg = rpt.Binseg(model="l2").fit(np.array(self.means))
         # binseg_result = binseg_alg.predict(n_bkps=1)
         bkp = self.breakpoint
@@ -120,6 +141,11 @@ class AnalyzeData:
         plt.show()
 
     def hypothesis_test(self):
+        """
+        Used to determine if there is a statistically
+        significant difference between the data before
+        and after the identified changepoint. 
+        """
         t, p = stats.ttest_ind(
             self.means[: int(self.breakpoint)],
             self.means[int(self.breakpoint) :],
