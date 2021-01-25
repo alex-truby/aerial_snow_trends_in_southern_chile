@@ -1,6 +1,6 @@
 # Changes in Aerial Snow Cover in Southern Chile, 1984 - 2016
 ### Alex Truby
-### Galvanize DSI - Capstone 3
+
 
 _____
 
